@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -27,8 +28,10 @@ public class ImageToRGBArray {
 			imgBuffer = ImageIO.read(new File("res/rgbimage.png"));
 			w=imgBuffer.getWidth();
 			h=imgBuffer.getHeight();
+			int totallen=w*h;
 			int[][][] pixels = new int[w][h][3];
 			//get colors to pixels[][][]
+			
 			for( int i = 0; i < w; i++ )
 			    for( int j = 0; j < h; j++ )
 			    	{
@@ -36,10 +39,20 @@ public class ImageToRGBArray {
 			    	pixels[i][j][0] = c.getRed();
 					pixels[i][j][1] = c.getGreen();
 					pixels[i][j][2] = c.getBlue();
+					
 			    	}
-			
+			int ptr=0;
+			byte buf[]=new byte[totallen];
+			for(int y=0;y<h;y++)
+				for(int x=0;x<w;x++)
+				{
+					ptr++;
+					buf[ptr]=pixels[x][y][0];
+				}
+//-------------------CREATING BYTEARRAY INPUT STREAM
+			ByteArrayInputStream bias =new ByteArrayInputStream(byte[] buf);
 		
-//write colors to new BufferedImage
+//--------------------WRITE COLORS TO NEW BUFFEREDIMAGE----------------------
 				img2= new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 				int i,j;
 				j=0;
@@ -49,49 +62,10 @@ public class ImageToRGBArray {
 				    	Color c2=new Color(pixels[i][j][0], 0, 0);
 				    	img2.setRGB(i, j, c2.getRGB());
 				    	
-				    	}
-				//final int len[][];
-			int len[][]=new int[i][j];
-				for(i=0;i<w;i++)
-					for(j=0;j<h;j++)
-						{
-						len[i][j]=pixels[i][j][0];
-						}
-//define totallen of sound				
-				
-				int totallen=w*h;
-				
-				byte[] buf = new byte[ 1 ];
-			    AudioFormat af = new AudioFormat( (float )44100, 8, 1, true, false );
-			
-//image to sound inputs
-			    
-					
-						SourceDataLine sdl = AudioSystem.getSourceDataLine(af);
-						sdl = AudioSystem.getSourceDataLine(af);
-						sdl.open(af);
-						sdl.start();
-						for(int x=0;x<w;x++)
-						{
-							for(int y=0;y<h;y++)
-							{
-						for (int run = 0; run < 2200; run++) 
-							{
-								double angle = run*100 /  (len[x][y]+1) / 440 * 2.0 * Math.PI;
-								buf[0] = (byte) (Math.sin(angle) * 1000);
-								sdl.write(buf, 0, 1);
-								System.out.println("masti");
-							}
-							}
-						}
-						sdl.drain();
-						sdl.stop();
-						sdl.close();
-						
-						
-					
+				    	}			
 		
-				    // retrieve image
+//--------------------------------RETRIEVE IMAGE-----------------------------
+				
 				    File outputfile = new File("D:\\saved.png");
 				    ImageIO.write(img2, "png", outputfile);
 				    File outputfile2 = new File("D:\\saved2.png");
@@ -102,10 +76,8 @@ public class ImageToRGBArray {
 				    	e.printStackTrace();
 					}
 			
-			
-/*			
- 		//print rgb on console
- 		
+/*-------------------------------PRINT RGB ON CONSOLE------------------------
+ * 
  			for(int j=0;j<h;j++)
 			{
 				System.out.println("");
@@ -115,7 +87,8 @@ public class ImageToRGBArray {
 				//System.out.print("()"+(img2.getRGB(i, j)-imgBuffer.getRGB(i, j)));
 				}
 			}
-*/		
+-----------------------------------------------------------------------------*/		
+		
 		System.out.println("Completed");
 		
 	}
