@@ -28,7 +28,7 @@ public class ImageToRGBArray {
 		Color c;
 		BufferedImage imgBuffer,img2 = null;
 		try {
-			imgBuffer = ImageIO.read(new File("res/gradient.png"));
+			imgBuffer = ImageIO.read(new File("res/Untitled.png"));
 			w=imgBuffer.getWidth();
 			h=imgBuffer.getHeight();
 			int totallen=w*h;
@@ -36,14 +36,18 @@ public class ImageToRGBArray {
 			//get colors to pixels[][][]
 			
 			for( int i = 0; i < w; i++ )
+				{System.out.println("------------------");
 			    for( int j = 0; j < h; j++ )
 			    	{
 			    	c = new Color(imgBuffer.getRGB(i,j));
 			    	pixels[i][j][0] = c.getRed();
 					pixels[i][j][1] = c.getGreen();
 					pixels[i][j][2] = c.getBlue();
+					//print pixels array on console
 					
-			    	}
+					System.out.println("Pxl["+i+"]["+j+"]  R="+pixels[i][j][0]+"  "+"G="+ pixels[i][j][1]+"  B="+pixels[i][j][2]);
+					
+			    	}}
 //-------------------CREATING LONG 1D ARRAY FROM 2D--------------------------
 
 			int ptr=0;
@@ -52,13 +56,13 @@ public class ImageToRGBArray {
 				for(int x=0;x<w;x++)
 				{
 					ptr++;
-					buf[ptr]=(byte)(pixels[x][y][2]);
+					buf[ptr]=(byte)(pixels[x][y][0]);
 				}
-//-------------------CREATING BYTEARRAY INPUT STREAM-------------------------
+//-------------------WRITING TO WAV FILE-------------------------
 			
 			ByteArrayInputStream bais =new ByteArrayInputStream(buf);
 			//try changing audio format for detectable sound variation wrt image
-			AudioFormat format = new AudioFormat(2000f, 16, 1, true, false);
+			AudioFormat format = new AudioFormat(2000f, 32, 1, true, false);
 	        File file = new File("D:\\file.wav");
 	        long length = (long)(buf.length / format.getFrameSize());
 			AudioInputStream audioInputStreamTemp = new AudioInputStream(bais, format, length);
@@ -71,7 +75,7 @@ public class ImageToRGBArray {
 				for( i = 0; i < w; i++ )
 				    for( j = 0; j < h; j++ )
 				    	{
-				    	Color c2=new Color(0, 0, pixels[i][j][2]);
+				    	Color c2=new Color(pixels[i][j][0],0 ,0);
 				    	img2.setRGB(i, j, c2.getRGB());
 				    	
 				    	}			
@@ -82,7 +86,7 @@ public class ImageToRGBArray {
 				    ImageIO.write(img2, "png", outputfile);
 				    File outputfile2 = new File("D:\\saved2.png");
 				    ImageIO.write(imgBuffer, "png", outputfile2);
-				    System.out.println("Out of Try Catch block Sucessfully");
+				    //System.out.println("Out of Try Catch block Sucessfully");
 				} 
 				catch (IOException e) 
 					{
@@ -102,7 +106,7 @@ public class ImageToRGBArray {
 			}
 -----------------------------------------------------------------------------*/		
 		
-		System.out.println("Completed");
+		System.out.println("===================");
 		
 	}
 
