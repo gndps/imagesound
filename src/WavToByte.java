@@ -15,23 +15,26 @@ public class WavToByte {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String path = new String("D:\\file.wav");
+		String path = new String("D:\\artificial.wav");
 		File wavFile=new File(path);
 		try {
 			AudioInputStream ais=AudioSystem.getAudioInputStream(wavFile);
 			byte[] data=new byte[ais.available()];
 			ais.read(data);
+			
 //------------------FIXING NEGATIVE VALUES ----------------------
 			
 			for(int i=0;i<data.length;i++)
 			{
 			// if (data[i]<0)
-				// data[i]+=256;
+				 data[i]=(byte)(128-(int)data[i]);
 			}
 			
 //--------------------ONE SIDE FOR SQUARE IMAGE-----------------------------
 			
 			int oneSide = (int)Math.ceil(Math.sqrt((double)data.length));
+			int temp = data.length;
+			System.out.println("lnght="+data.length+"and sqr="+oneSide*oneSide);
 			
 					
 //--------------------WRITE COLORS TO NEW BUFFEREDIMAGE----------------------
@@ -42,16 +45,20 @@ public class WavToByte {
 			    	{
 			    	Color c2=new Color(Math.abs(data[ptr]),0, 0 );
 			    	img.setRGB(i, j, c2.getRGB());
-			    	System.out.println("pxl["+j+"]["+i+"]  R="+ c2.getRed()+" G="+c2.getGreen()+"  B="+c2.getBlue());
+			    	//img.setRGB(i, j, Math.abs(data[ptr]) );
+			    //	System.out.println("pxl["+j+"]["+i+"]  R="+ c2.getRed()+" G="+c2.getGreen()+"  B="+c2.getBlue());
+			    	if(ptr==data.length-1)
+			    	break;
 			    	ptr++;
 			    	}
 			
-			for( j = 0; j < oneSide; j++ )
+		/*	for( j = 0; j < oneSide; j++ )
 			    for( i = 0; i < oneSide; i++ )
 			System.out.println("data["+j+"]["+i+"] = "+data[ptr]);
+			*/
 //-------------------WRITING BUFFERED IMAGE TO DISK--------------------------
 			
-			File outputfile = new File("D:\\wavtoimage.png");
+			File outputfile = new File("D:\\FinalOutput.png");
 		    ImageIO.write(img, "png", outputfile);
 		    System.out.println("woosh!!!");
 		    
